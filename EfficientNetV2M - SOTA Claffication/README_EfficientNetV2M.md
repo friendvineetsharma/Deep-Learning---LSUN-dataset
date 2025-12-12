@@ -1,0 +1,19 @@
+LSUN Scene Classification - EfficientNetV2M👥 Group MembersVineet Sharma - 301364822📌 Project OverviewThis project implements a state-of-the-art Transfer Learning pipeline to classify complex indoor scenes from the LSUN dataset. It leverages the EfficientNetV2M architecture, known for its superior parameter efficiency and accuracy.The project distinguishes between four specific room categories:bedroomdining_roomkitchenliving_roomKey Strategy: A robust Two-Stage Training approach is used:Feature Extraction: Training only the custom classification head while the backbone is frozen.Fine-Tuning: Unfreezing the top layers of the backbone and training with a very low learning rate to adapt features specifically to room interiors.🛠️ Prerequisites & System RequirementsHardwareGPU: NVIDIA GPU with at least 11GB VRAM (e.g., RTX 2080 Ti, RTX 3080/4080 or better).Note: EfficientNetV2M at 384x384 resolution is memory intensive.RAM: 16GB+ System RAM recommended for data shuffling.SoftwarePython: 3.8, 3.9, or 3.10OS: Windows 10/11 or Linux (Code tested on Windows with native GPU support)📦 Required LibrariesInstall the exact dependencies required to run the notebook and scripts:Bash# Core Deep Learning (TensorFlow 2.10 is the last version with native Windows GPU support)
+pip install tensorflow==2.10.1
+
+# Data Processing & Visualization
+pip install numpy matplotlib seaborn pandas pillow
+
+# Machine Learning Utilities (Split & Metrics)
+pip install scikit-learn
+📂 Dataset SetupSource: Retrieve the LSUN dataset images for the four categories listed above.Root Directory: Create a folder named Dataset in the same directory as the notebook.Structure: Ensure the folder structure matches exactly as shown below:PlaintextProject_Root/
+│
+├── Dataset/                  <-- Source Folder
+│   ├── bedroom/              <-- Contains ~30,000 .jpg images
+│   ├── dining_room/          <-- Contains ~30,000 .jpg images
+│   ├── kitchen/              <-- Contains ~30,000 .jpg images
+│   └── living_room/          <-- Contains ~30,000 .jpg images
+│
+├── EfficientNetV2M_Training.ipynb
+└── README.md
+🚀 How to Run the Code1. Training the ModelOpen EfficientNetV2M_Training.ipynb in Jupyter Notebook or VS Code.Step 1: Setup & ValidationRun the first block to verify TensorFlow detects your GPU. The script will also check if the Dataset folder exists and validate the image counts.Step 2: Data OrganizationRun the organization block. This script will automatically create a new directory lsun_organized_v2m and split your data into:Train: 70%Validation: 15%Test: 15%Step 3: Stage 1 Training (Feature Extraction)Execute this block to train the new classification head for 15 epochs with Batch Size = 16. The backbone layers remain frozen.Step 4: Stage 2 Training (Fine-Tuning)Execute this block to unfreeze the model. Training continues for 50 epochs with a reduced Batch Size = 8 and a very low learning rate (1e-6) to prevent overfitting.Output: The best model weights will be saved as:EfficientNetV2M_Stage2_FineTuned_best.h52. Testing / InferenceTo test the model on a single image without running the training loop:Ensure the trained weights file (EfficientNetV2M_Stage2_FineTuned_best.h5) is in your project root.Place a sample image named Kitchen_1.jpg in the root directory.Run the standalone inference script provided at the end of the notebook or use the provided python file Test_EfficientNet.py.📊 Performance ResultsThe final fine-tuned model achieved the following performance metrics on the unseen Test Set (18,000 images):MetricValueModel ArchitectureEfficientNetV2MInput Resolution384 x 384 pixelsTest Accuracy~94.12%Loss0.2197Classification Report SummaryThe model shows high precision and recall across all classes, with Bedroom classification achieving the highest individual performance.
